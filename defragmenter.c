@@ -9,7 +9,7 @@ node_t * addDEFNode(node_t * node,FILE * db,int depth){
 	nn->size = 0;
 	nn->linked = node->linked;
 	writeNode(nn,db);
-	if(node->hasChild==true){
+	if(node->hasChild==true&&!node->isPointer){
 		for(int i = 0;i<node->size;i++){
 			node_t * cnode  = getNodeFromAddr(node->children[i],db_file);
 			node_t * cn = addDEFNode(cnode,db,depth+1);

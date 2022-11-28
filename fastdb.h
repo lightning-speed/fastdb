@@ -36,6 +36,7 @@ typedef struct{
  enum access_t access;
  char * content;
  bool hasChild;
+ bool isPointer;
 }node_t;
 
 extern FILE * db_file;
@@ -59,3 +60,10 @@ int writeContent(node_t * node,char * content,FILE * db);
 
 char * readContent(node_t * node,FILE * db);
 void defragment();
+
+
+node_t * addDEFNode(node_t * node,FILE * db,int depth);
+
+
+void printTree(node_t * node,int depth,FILE * db);
+void ptree(node_t * db);

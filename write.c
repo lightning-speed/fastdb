@@ -15,6 +15,7 @@ node_t *createRNode(char * name){
 	node->linked = false;
 	node->hasChild = false;
 	node->access = READ_WRITE;
+	node->isPointer = false;
 	strcpy(node->name,name);
 	return node;
 }

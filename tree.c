@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-long long metasize = 0;
-long long contentsize = 0;
+ int metasize = 0;
+ int contentsize = 0;
 void printTree(node_t * node,int depth,FILE * db){
 
 	metasize+=sizeof(node_t);
@@ -12,6 +12,8 @@ void printTree(node_t * node,int depth,FILE * db){
 		putchar('=');
 	}
 	printf("> %s",node->name);
+	if(node->isPointer)
+	printf("(pointer)");
 	int nn = strlen(node->name);
 	if(node->hasChild==false){
 		contentsize+=node->size;
@@ -21,7 +23,7 @@ void printTree(node_t * node,int depth,FILE * db){
 	}
 	printf(" \n");
 
-	if(node->hasChild)
+	if(node->hasChild&&(!node->isPointer||depth==1))
 	for(int i = 0;i<node->size;i++){
 		for(int i = 0;i<depth;i++){
 			putchar(' ');
@@ -36,7 +38,7 @@ void printTree(node_t * node,int depth,FILE * db){
 ptree(node_t * db){
 	printTree(db,1,db_file);
 	fseek(db_file,0,SEEK_END);
-	long long totalsize = ftell(db_file)/1024;
+	int totalsize = ftell(db_file)/1024;
 	metasize/=1024;
 	contentsize/=1024;
 	printf("\nMeta Size: %i KB\n",metasize);

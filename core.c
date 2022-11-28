@@ -101,7 +101,18 @@ int startDB(int argc,char ** argv){
   	//TREE
 
   	else if(!strcmp(argv[2],"-tree")){
+  		if(argc>3){
+  	  		node_t * node  = openNode(argv[3],READ);
+  	  		if(node!=NULL)
+  	  		ptree(node);
+  	  		else{
+  					printf("node doesn't exist");
+  					return 56;
+  				}		
+  	  }
+  		else if(argc>2)
   		ptree(db);
+  	  
   	}
   	else if(!strcmp(argv[2],"-rename"))	{
   		if(argc>4){
@@ -148,8 +159,31 @@ int startDB(int argc,char ** argv){
   		}
   	}else{
   			printf("usage: -setperms [node_path] [perms] //perms must be a value between 0-3 [read,write,read_write]");
-  			return 57;
+  			return 57;	
   	}
+  }
+  else if(!strcmp(argv[2],"-point")){
+  		if(argc>4){
+  		node_t * node  = openNode(argv[3],READ);
+  		node_t * noder = openNode(argv[4],WRITE);
+  		if(noder==1){
+  			printf("Innode cannot be created");
+  			return 61;
+  	  }
+  		if(node!=NULL){
+  			noder->isPointer = true;
+  			link(noder,node,db_file);
+  			free(node);
+  		}else{
+  			printf("node doesn't exist");
+  			return 56;
+
+  		}
+  	}
+  	else{
+  			printf("usage: -point [node_path(child)] [node_path(parent)] ");
+  			return 57;	
+  	}	
   }
   else{
   	printf("Unknow Option '%s'",argv[2]);
@@ -197,3 +231,4 @@ node_t * openNode(char * path,enum access_t access){
 	return node;
 }
 
+	
