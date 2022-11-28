@@ -172,7 +172,7 @@ int startDB(int argc,char ** argv){
   	  }
   		if(node!=NULL){
   			noder->isPointer = true;
-  			link(noder,node,db_file);
+  			linkNode(noder,node,db_file);
   			free(node);
   		}else{
   			printf("node doesn't exist");
@@ -185,6 +185,10 @@ int startDB(int argc,char ** argv){
   			return 57;	
   	}	
   }
+  else if(!strcmp(argv[2],"-server")){
+    	serve_forever("12913");
+	
+	}
   else{
   	printf("Unknow Option '%s'",argv[2]);
   			return 69;
@@ -221,7 +225,7 @@ node_t * openNode(char * path,enum access_t access){
 				return 1;
 			}
 			node_t * cnode = createRNode(temp[i]);
-			link(node,cnode,db_file);
+			linkNode(node,cnode,db_file);
 			free((void *)node);
 			node = cnode;
 		}else{

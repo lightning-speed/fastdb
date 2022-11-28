@@ -48,7 +48,7 @@ node_t *createNode();
 node_t *createRNode(char * name);
 uintptr_t writeNode(node_t * node,FILE * db);
 void saveNode(node_t * node,FILE * db);
-void link(node_t * parent,node_t * child,FILE * db);
+void linkNode(node_t * parent,node_t * child,FILE * db);
 node_t * createDB(FILE * db_file);
 node_t * openNode(char * path,enum access_t access);
 node_t *getNodeFromAddr(uintptr_t addr,FILE * db);

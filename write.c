@@ -29,7 +29,7 @@ void saveNode(node_t * node,FILE * db){
 	fseek(db,node->addr,SEEK_SET);
 	fwrite(node,1,sizeof(node_t),db);
 }
-void link(node_t * parent,node_t * child,FILE * db){
+void linkNode(node_t * parent,node_t * child,FILE * db){
 	if(findChildAddr(parent,child->name,db)!=1){
 		printf("%s%s%s%s%s","Child '",child->name,"'' already exists in '",parent->name,"'");
 		return;

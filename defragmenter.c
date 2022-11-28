@@ -13,7 +13,7 @@ node_t * addDEFNode(node_t * node,FILE * db,int depth){
 		for(int i = 0;i<node->size;i++){
 			node_t * cnode  = getNodeFromAddr(node->children[i],db_file);
 			node_t * cn = addDEFNode(cnode,db,depth+1);
-			link(nn,cn,db);
+			linkNode(nn,cn,db);
 			if(cnode->hasChild==false){
 				char * content = readContent(cnode,db_file);
 				writeContent(cn,content,db);
