@@ -1,5 +1,6 @@
 #include <fastdb.h>
 #include <math.h>
+#include <string.h>
 
 
 long long hashName(char * name){

@@ -32,6 +32,9 @@ typedef struct{
  bool hasChild;
 }node_t;
 
+extern FILE * db_file;
+extern node_t * db_node;
+
 node_t * createDB();
 int startDB(int argc,char ** argv);
 node_t *createNode();
@@ -49,3 +52,4 @@ long long hashName(char * name);
 void writeContent(node_t * node,char * content,FILE * db);
 
 char * readContent(node_t * node,FILE * db);
+void defragment();

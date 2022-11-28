@@ -2,7 +2,9 @@
 #include <fastdb.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 FILE * db_file;
+node_t * db_node;
 char * input_file_path = NULL;
 
 
@@ -13,6 +15,10 @@ int startDB(int argc,char ** argv){
   	return 44;
   }
   db_file = fopen(input_file_path,"rwb+");
+  if(db_file==NULL){
+  	printf("%s%s%s","Error: file '",input_file_path,"' doesn't exist");
+  	return 55;
+  }
   fseek(db_file,0,SEEK_END);
   long long int size = ftell(db_file);
   fseek(db_file,0,SEEK_SET);
@@ -22,6 +28,7 @@ int startDB(int argc,char ** argv){
    db = createDB(db_file);
   }else
    db  = getNodeFromAddr(0,db_file);
+  db_node = db;
   if(argc>2)
   	if(!strcmp(argv[2],"-read")){
   		if(argc>3){
@@ -46,7 +53,12 @@ int startDB(int argc,char ** argv){
   		}else{
   			printf("Require more arguments");
   		}
-  	}
+  	}else if(!strcmp(argv[2],"-defragment")){
+  		defragment();
+  		return;
+  	}else if(!strcmp(argv[2],"-tree")){
+  		ptree(db);
+  		}
   fseek(db_file,0,SEEK_END);
   fclose(db_file);
   return 0;
@@ -71,13 +83,13 @@ node_t * openNode(char * path,enum access_t access){
 	for(int i = 0;i<depth_index+1;i++){
 		uintptr_t addr = findChildAddr(node,temp[i],db_file);
 		if(addr!=1){
-			free(node);
+			free((void *)node);
 			node = getNodeFromAddr(addr,db_file);
 		}
 		else if(access==WRITE||access==READ_WRITE){
 			node_t * cnode = createRNode(temp[i]);
 			link(node,cnode,db_file);
-			free(node);
+			free((void *)node);
 			node = cnode;
 		}else{
 			return NULL;
@@ -85,3 +97,4 @@ node_t * openNode(char * path,enum access_t access){
 	}
 	return node;
 }
+

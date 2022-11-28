@@ -6,7 +6,7 @@
 node_t * getNodeFromAddr(uintptr_t addr,FILE *db){
 	node_t * node = createNode();
 	fseek(db,addr,SEEK_SET);
-	fread(node,1,sizeof(node_t),db);
+	int result = fread((void *)node,1,sizeof(node_t),db);
 	return node;
 }
 
@@ -15,7 +15,7 @@ uintptr_t findChildAddr(node_t *node,char * name,FILE *db){
 	for(int i = 0;i<node->size;i++){
 		long long tempHash;
 		fseek(db,node->children[i],SEEK_SET);;
-		fread(&tempHash,1,8,db);
+		int result = fread((void *)&tempHash,1,8,db);
 		if(tempHash==hash){
 			return node->children[i];
 		}
@@ -27,7 +27,7 @@ node_t * getNode(node_t * parent,char * name,FILE * db){
 }
 char * readContent(node_t * node,FILE * db){
 	char * out = malloc(node->size);
-	fseek(db,node->content,SEEK_SET);
-	fread(out,1,node->size,db);
+	fseek(db,(uintptr_t)node->content,SEEK_SET);
+	int result = fread(out,1,node->size,db);
 	return out;
 }
