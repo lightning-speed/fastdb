@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 extern char * input_file_path;
+extern char * index_file_path;
 
 #define MAX_CHILDREN 128
 #define MAX_DEPTH 10

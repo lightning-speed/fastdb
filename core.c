@@ -6,7 +6,7 @@
 FILE * db_file;
 node_t * db_node;
 char * input_file_path = NULL;
-
+char * index_file_path;
 
 
 int startDB(int argc,char ** argv){
@@ -49,7 +49,7 @@ int startDB(int argc,char ** argv){
   				return 78;
   			}
   			else
-  			printf(content);
+  			printf("%s",content);
   			free(content);
   			free(node);
   		}
@@ -186,6 +186,7 @@ int startDB(int argc,char ** argv){
   	}	
   }
   else if(!strcmp(argv[2],"-server")){
+  	  
     	serve_forever("12913");
 	
 	}
@@ -195,7 +196,7 @@ int startDB(int argc,char ** argv){
   }
   fseek(db_file,0,SEEK_END);
   fclose(db_file);
-  return 0;
+  return 0;	
 }
 
 node_t * openNode(char * path,enum access_t access){

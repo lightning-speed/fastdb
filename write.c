@@ -1,4 +1,4 @@
-#include <fastdb.h>
+ #include <fastdb.h>
 #include <fastdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +54,7 @@ int writeContent(node_t * node,char * content,FILE * db){
 	}
 	if(node->hasChild==true){
 		printf("%s%s%s","Node '",node->name,"' cannot hold values since its a parent node");
-		return;
+		return -2;
 	}
 	fseek(db,0,SEEK_END);
 	node->content = (char *)ftell(db);
@@ -62,6 +62,7 @@ int writeContent(node_t * node,char * content,FILE * db){
 	node->size = n;
 	fwrite(content,1,n+1,db);
 	saveNode(node,db);
+	return 0;
 }
 
 void deleteNode(node_t * node,FILE * db){

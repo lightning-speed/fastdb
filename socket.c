@@ -1,5 +1,5 @@
 
-        char rer[204];
+        char rer[2048];
 
 #ifndef _HTTPD_H___
 #define _HTTPD_H___
@@ -71,23 +71,79 @@ void route()
 
     ROUTE_GET("/")
     {
+        char rert[2048];
+        memcpy(&rert,&rer,204);
         printf("HTTP/1.1 200 OK\r\n\r\n");
-        char * path = rer;
-        for(int i = 0;i<64;i++){
-            if(path[i]=='?')
+        char * prot = rert;
+        for(int i = 0;i<strlen(prot);i++){
+            if(prot[i]=='?')
             {
-                path+=i+1;
+                prot+=i+1;
                 break;
             }
         }
-        path[3] = 0;
-        if(strcmp(path,"get")==0){                
-            path+=4;
-            node_t * node = openNode(path,READ);
-            char * content = readContent(node,db_file);
-            printf(content);
-            free(content);
+        char *path = prot;
+         for(int i = 0;i<strlen(path );i++){
+            if(prot[i]=='=')
+            {
+                prot[i] = 0;
+                path = prot+i+1;
+                break;
+            }
         }
+        char * content = path;
+        
+        for(int i = 0;i<strlen(path);i++){
+            if(path[i]=='&')
+            {
+                path[i] = 0;
+                content = path+i+1;
+                break;
+            }
+        }
+        
+
+        if(strcmp(prot,"get")==0){                
+            node_t * node = openNode(path,READ);
+            if(node!=NULL){
+                char * content = readContent(node,db_file);
+                if(content!=NULL&&node->hasChild==false)
+                printf("{\"response\": \"200\",\"data\": \"%s\"}",content);
+                else{
+                printf("{\"response\": \"602\"}");
+                }
+                free(content);
+            }
+            else{
+                printf("{\"response\": \"601\"}");
+            }
+            free(node);
+
+        }
+        else if(strcmp(prot,"write")==0){                
+            node_t * node = openNode(path,WRITE);
+            if(node==NULL){
+                printf("{\"response\": \"601\"}");
+            }
+            int res = writeContent(node,content,db_file);
+            if(res == 0){
+                printf("{\"response\": \"200\"}");
+            }else{
+                printf("{\"response\": \"603\"}");
+            }
+             free(node);
+            
+           
+        }
+        else{
+                node_t * node = openNode("index",READ);
+                char * content = readContent(node,db_file);
+                printf(content);
+
+        }
+        db_file = fopen(input_file_path,"rwb+");
+        fclose(db_file);
+        
 
     }
 
