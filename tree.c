@@ -17,7 +17,7 @@ void printTree(node_t * node,int depth,FILE * db){
 		contentsize+=node->size;
 		for(int i = 0;i<50-depth-nn;i++)
 			putchar(' ');
-		printf("%i KB",node->size/1024);
+		printf("%i KB [ %s ]",node->size/1024,perms[node->access]);
 	}
 	printf(" \n");
 

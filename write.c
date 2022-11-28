@@ -14,6 +14,7 @@ node_t *createRNode(char * name){
 	node->uid = hashName(name);
 	node->linked = false;
 	node->hasChild = false;
+	node->access = READ_WRITE;
 	strcpy(node->name,name);
 	return node;
 }
@@ -46,7 +47,10 @@ node_t * createDB(FILE * db_file){
  writeNode(db,db_file);
  return db;
 }
-void writeContent(node_t * node,char * content,FILE * db){
+int writeContent(node_t * node,char * content,FILE * db){
+	if(node->access!=WRITE&&node->access!=READ_WRITE){
+		return -1;
+	}
 	if(node->hasChild==true){
 		printf("%s%s%s","Node '",node->name,"' cannot hold values since its a parent node");
 		return;
@@ -57,4 +61,18 @@ void writeContent(node_t * node,char * content,FILE * db){
 	node->size = n;
 	fwrite(content,1,n+1,db);
 	saveNode(node,db);
+}
+
+void deleteNode(node_t * node,FILE * db){
+	node_t * parent = getNodeFromAddr(node->parent,db);
+	for(int i = 0;i<parent->size;i++){
+		if(parent->children[i]==node->addr){
+			for(int j = i;j<parent->size;j++){
+				parent->children[j] = parent->children[j+1];
+			}
+			parent->size--;
+			break;
+		}
+	}
+	saveNode(parent,db);
 }

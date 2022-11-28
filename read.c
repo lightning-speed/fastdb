@@ -26,6 +26,9 @@ node_t * getNode(node_t * parent,char * name,FILE * db){
 	return getNodeFromAddr(findChildAddr(parent,name,db),db);
 }
 char * readContent(node_t * node,FILE * db){
+	if(node->access!=READ&&node->access!=READ_WRITE){
+		return NULL;
+	}
 	char * out = malloc(node->size);
 	fseek(db,(uintptr_t)node->content,SEEK_SET);
 	int result = fread(out,1,node->size,db);

@@ -18,6 +18,12 @@ enum access_t{
   READ_WRITE  = 2,
   NONE =  3
 };
+static char* perms[] = {
+  "READ",
+  "WRITE",
+  "READ_WRITE",
+  "NONE"
+};
 
 typedef struct{
  long long uid;
@@ -49,7 +55,7 @@ uintptr_t findChildAddr(node_t *node,char * name,FILE *db);
 node_t * getNode(node_t * parent,char * name,FILE * db);
 
 long long hashName(char * name);
-void writeContent(node_t * node,char * content,FILE * db);
+int writeContent(node_t * node,char * content,FILE * db);
 
 char * readContent(node_t * node,FILE * db);
 void defragment();
