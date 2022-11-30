@@ -8,7 +8,7 @@ extern char * index_file_path;
 
 #define MAX_CHILDREN 128
 #define MAX_DEPTH 10
-
+#define fprotocol "rb+"
 
 
 
@@ -68,3 +68,4 @@ node_t * addDEFNode(node_t * node,FILE * db,int depth);
 
 void printTree(node_t * node,int depth,FILE * db);
 void ptree(node_t * db);
+void deleteNode(node_t * node, FILE *db);

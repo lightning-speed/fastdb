@@ -15,9 +15,9 @@ int startDB(int argc,char ** argv){
   	return 44;
   }
   //OPEN
-  db_file = fopen(input_file_path,"rwb+");
+  db_file = fopen(input_file_path,fprotocol);
   if(db_file==NULL){
-  	printf("%s%s%s","Error: file '",input_file_path,"' doesn't exist");
+	db_file=fopen(input_file_path,"wb+");
   	return 55;
   }
 
@@ -68,7 +68,7 @@ int startDB(int argc,char ** argv){
   	else if(!strcmp(argv[2],"-write")){
   		if(argc>4){
   		node_t * node  = openNode(argv[3],WRITE);
-  		if(node==1){
+  		if((int)node==1){
   			printf("Innode cannot be created");
   			return 61;
   		}
@@ -119,6 +119,7 @@ int startDB(int argc,char ** argv){
   		node_t * node  = openNode(argv[3],READ);
   		if(node!=NULL){
   			strcpy(node->name,argv[4]);
+  			node->uid = hashName(node->name);
   			saveNode(node,db_file);
   			free(node);
   		}else{

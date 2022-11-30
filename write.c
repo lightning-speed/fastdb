@@ -20,16 +20,27 @@ node_t *createRNode(char * name){
 	return node;
 }
 uintptr_t writeNode(node_t * node,FILE * db){
+	if(node==NULL){
+		printf("CANNOT WRITE NULL NODE");
+		return;
+	}
 	fseek(db,0,SEEK_END);
 	node->addr = ftell(db);
 	saveNode(node,db);
 	return node->addr;
 }
 void saveNode(node_t * node,FILE * db){
+	if(node==NULL){
+		printf("CANNOT SAVE NULL NODE");
+	}
 	fseek(db,node->addr,SEEK_SET);
 	fwrite(node,1,sizeof(node_t),db);
 }
 void linkNode(node_t * parent,node_t * child,FILE * db){
+	if(parent==NULL||child==NULL){
+		printf("CANNOT LINK NULL NODE");
+		return;
+	}
 	if(findChildAddr(parent,child->name,db)!=1){
 		printf("%s%s%s%s%s","Child '",child->name,"'' already exists in '",parent->name,"'");
 		return;
@@ -66,6 +77,10 @@ int writeContent(node_t * node,char * content,FILE * db){
 }
 
 void deleteNode(node_t * node,FILE * db){
+	if(node==NULL){
+		printf("CANNOT DELETE NULL NODE!");
+		return;
+	}
 	node_t * parent = getNodeFromAddr(node->parent,db);
 	for(int i = 0;i<parent->size;i++){
 		if(parent->children[i]==node->addr){

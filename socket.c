@@ -121,7 +121,7 @@ void route()
 
         }
         else if(strcmp(prot,"write")==0){                
-            node_t * node = openNode(path,WRITE);
+            node_t * node = openNode(path,READ_WRITE);
             if(node==NULL){
                 printf("{\"response\": \"601\"}");
             }
@@ -141,8 +141,9 @@ void route()
                 printf(content);
 
         }
-        db_file = fopen(input_file_path,"rwb+");
         fclose(db_file);
+        db_file = fopen(input_file_path,fprotocol);
+        fseek(db_file,0,SEEK_SET);
         
 
     }
@@ -151,7 +152,7 @@ void route()
     {
      
       printf("HTTP/1.1 200 OK\r\n\r\n");
-   
+      printf("fuck you!");
     
     }
   

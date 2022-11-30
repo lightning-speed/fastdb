@@ -28,8 +28,7 @@ node_t * addDEFNode(node_t * node,FILE * db,int depth){
 void defragment(){
 	printf("\nInfo: defragmenting...");
 	remove("./temp.dat");
-	system("touch ./temp.dat");
-	FILE * tempsFile = fopen("./temp.dat","rwb+");
+	FILE * tempsFile = fopen("./temp.dat","wb+");
 	fseek(tempsFile,0,SEEK_SET);
 	addDEFNode(db_node,tempsFile,0);
 	fclose(db_file);

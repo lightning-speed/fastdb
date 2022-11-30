@@ -11,6 +11,10 @@ node_t * getNodeFromAddr(uintptr_t addr,FILE *db){
 }
 
 uintptr_t findChildAddr(node_t *node,char * name,FILE *db){
+	if(node==NULL){
+		printf("CANNOT FIND NULL NODE ADDR");
+		return;
+	}
 	long long hash = hashName(name);
 	for(int i = 0;i<node->size;i++){
 		long long tempHash;
