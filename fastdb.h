@@ -13,12 +13,19 @@ extern char * index_file_path;
 
 
 
+
 enum access_t{
   READ  = 0,
   WRITE  = 1,
   READ_WRITE  = 2,
   NONE =  3
 };
+enum RUN_TYPE{
+  CMD_LINE,
+  DATA_LISTNER,
+  SINGLE_EXEC
+};
+
 static char* perms[] = {
   "READ",
   "WRITE",
@@ -42,6 +49,7 @@ typedef struct{
 
 extern FILE * db_file;
 extern node_t * db_node;
+enum RUN_TYPE runType;
 
 node_t * createDB();
 int startDB(int argc,char ** argv);
@@ -69,3 +77,5 @@ node_t * addDEFNode(node_t * node,FILE * db,int depth);
 void printTree(node_t * node,int depth,FILE * db);
 void ptree(node_t * db);
 void deleteNode(node_t * node, FILE *db);
+
+void initArgs();

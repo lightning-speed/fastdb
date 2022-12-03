@@ -7,7 +7,34 @@ FILE * db_file;
 node_t * db_node;
 char * input_file_path = NULL;
 char * index_file_path;
+char * coms[] = {"-write","-read","-delete","-rename","-point","-tree","-server","-defragment","-setperms"};
+char * WRITE_C;
+char * READ_C;
+char * DEL_C;
+char * RENAME_C;
+char * POINT_C;
+char * TREE_C;
+char * SERVER_C;
+char * DEFRAGMENT_C;
+char * SETP_C;
 
+void initArgs(){
+	if(runType==CMD_LINE){
+		for(int i = 0;coms[i]!=NULL;i++){
+			coms[i]++;
+		}
+	}
+	WRITE_C  = coms[0];
+	READ_C = coms[1];
+	DEL_C = coms[2];
+	RENAME_C = coms[3];
+	POINT_C = coms[4];
+	TREE_C = coms[5];
+	SERVER_C = coms[6];
+	DEFRAGMENT_C = coms[7];
+	SETP_C = coms[8];
+
+}
 
 int startDB(int argc,char ** argv){
   if(input_file_path==NULL){
@@ -39,7 +66,7 @@ int startDB(int argc,char ** argv){
 
   	//READ
 
-  	if(!strcmp(argv[2],"-read")){
+  	if(!strcmp(argv[2],READ_C)){
   		if(argc>3){
   		node_t * node  = openNode(argv[3],READ);
   		if(node!=NULL){
@@ -65,10 +92,10 @@ int startDB(int argc,char ** argv){
 
   	//WRITE
 
-  	else if(!strcmp(argv[2],"-write")){
+  	else if(!strcmp(argv[2],WRITE_C)){
   		if(argc>4){
   		node_t * node  = openNode(argv[3],WRITE);
-  		if((int)node==1){
+  		if(node==(node_t *)1){
   			printf("Innode cannot be created");
   			return 61;
   		}
@@ -94,13 +121,13 @@ int startDB(int argc,char ** argv){
 
   	//DEFRAGMENT
 
-  	else if(!strcmp(argv[2],"-defragment")){
+  	else if(!strcmp(argv[2],DEFRAGMENT_C)){
   		defragment();
   	}
 
   	//TREE
 
-  	else if(!strcmp(argv[2],"-tree")){
+  	else if(!strcmp(argv[2],TREE_C)){
   		if(argc>3){
   	  		node_t * node  = openNode(argv[3],READ);
   	  		if(node!=NULL)
@@ -114,7 +141,7 @@ int startDB(int argc,char ** argv){
   		ptree(db);
   	  
   	}
-  	else if(!strcmp(argv[2],"-rename"))	{
+  	else if(!strcmp(argv[2],RENAME_C))	{
   		if(argc>4){
   		node_t * node  = openNode(argv[3],READ);
   		if(node!=NULL){
@@ -129,7 +156,7 @@ int startDB(int argc,char ** argv){
   		}
   	}
   }
-  	else if(!strcmp(argv[2],"-delete"))	{
+  	else if(!strcmp(argv[2],DEL_C))	{
   		if(argc>3){
   		node_t * node  = openNode(argv[3],READ);
   		if(node!=NULL){
@@ -163,11 +190,11 @@ int startDB(int argc,char ** argv){
   			return 57;	
   	}
   }
-  else if(!strcmp(argv[2],"-point")){
+  else if(!strcmp(argv[2],POINT_C)){
   		if(argc>4){
   		node_t * node  = openNode(argv[3],READ);
   		node_t * noder = openNode(argv[4],WRITE);
-  		if(noder==1){
+  		if(noder==(node_t *)1){
   			printf("Innode cannot be created");
   			return 61;
   	  }
@@ -186,7 +213,7 @@ int startDB(int argc,char ** argv){
   			return 57;	
   	}	
   }
-  else if(!strcmp(argv[2],"-server")){
+  else if(!strcmp(argv[2],SERVER_C)){
   	  
     	serve_forever("12913");
 	
@@ -224,7 +251,7 @@ node_t * openNode(char * path,enum access_t access){
 		}
 		else if(access==WRITE||access==READ_WRITE){
 			if(node->content!=NULL){
-				return 1;
+				return (node_t *)1;
 			}
 			node_t * cnode = createRNode(temp[i]);
 			linkNode(node,cnode,db_file);

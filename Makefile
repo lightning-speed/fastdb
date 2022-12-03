@@ -5,5 +5,5 @@ SRC = *.c
 
 all:
 	$(CC) $(cflags) $(SRC) -o $(OUTPUT_FILE)
-	$(OUTPUT_FILE) db.dat
+	$(OUTPUT_FILE) ./db.dat
    

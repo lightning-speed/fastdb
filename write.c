@@ -22,7 +22,7 @@ node_t *createRNode(char * name){
 uintptr_t writeNode(node_t * node,FILE * db){
 	if(node==NULL){
 		printf("CANNOT WRITE NULL NODE");
-		return;
+		return NULL;
 	}
 	fseek(db,0,SEEK_END);
 	node->addr = ftell(db);
@@ -49,7 +49,7 @@ void linkNode(node_t * parent,node_t * child,FILE * db){
 	writeNode(child,db);
 	parent->children[parent->size++] = child->addr;
 	parent->hasChild = true;
-	child->parent = parent->addr;
+	child->parent = (uintptr_t*)parent->addr;
 	child->linked = true;
 	saveNode(parent,db);
 	saveNode(child,db);
@@ -74,14 +74,14 @@ int writeContent(node_t * node,char * content,FILE * db){
 	fwrite(content,1,n+1,db);
 	saveNode(node,db);
 	return 0;
-}
+ }
 
 void deleteNode(node_t * node,FILE * db){
 	if(node==NULL){
 		printf("CANNOT DELETE NULL NODE!");
 		return;
 	}
-	node_t * parent = getNodeFromAddr(node->parent,db);
+	node_t * parent = getNodeFromAddr((node_t *)(node->parent),db);
 	for(int i = 0;i<parent->size;i++){
 		if(parent->children[i]==node->addr){
 			for(int j = i;j<parent->size;j++){

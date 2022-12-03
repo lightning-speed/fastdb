@@ -1,8 +1,6 @@
 
         char rer[2048];
 
-#ifndef _HTTPD_H___
-#define _HTTPD_H___
 
 #include <string.h>
 #include <stdio.h>
@@ -59,7 +57,6 @@ void route();
                                 "The server has no handler to the request.\r\n" \
                             );
 
-#endif
 
 
 #include <fastdb.h>
@@ -74,35 +71,20 @@ void route()
         char rert[2048];
         memcpy(&rert,&rer,204);
         printf("HTTP/1.1 200 OK\r\n\r\n");
-        char * prot = rert;
-        for(int i = 0;i<strlen(prot);i++){
-            if(prot[i]=='?')
-            {
-                prot+=i+1;
-                break;
-            }
-        }
-        char *path = prot;
-         for(int i = 0;i<strlen(path );i++){
-            if(prot[i]=='=')
-            {
-                prot[i] = 0;
-                path = prot+i+1;
-                break;
-            }
-        }
-        char * content = path;
-        
-        for(int i = 0;i<strlen(path);i++){
-            if(path[i]=='&')
-            {
-                path[i] = 0;
-                content = path+i+1;
-                break;
-            }
-        }
-        
-
+        char * prot = NULL;
+        char *tokenKey = NULL;
+        char *path = NULL;
+        char *content = NULL;
+        strtok(rert,"&");
+        prot = strtok(NULL,"&");
+        if(prot!=NULL)
+        path = strtok(NULL,"&");
+        if(path!=NULL)
+        tokenKey = strtok(NULL,"&");
+        if(tokenKey!=NULL)
+        content = strtok(NULL,"&");
+        fprintf(stderr,"\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n",prot,path,content,tokenKey);
+        if(prot!=NULL){
         if(strcmp(prot,"get")==0){                
             node_t * node = openNode(path,READ);
             if(node!=NULL){
@@ -135,16 +117,20 @@ void route()
             
            
         }
+        }
         else{
                 node_t * node = openNode("index",READ);
                 char * content = readContent(node,db_file);
-                printf(content);
+                printf("%s",content);
 
         }
+        fseek(db_file,0,SEEK_END);
         fclose(db_file);
         db_file = fopen(input_file_path,fprotocol);
         fseek(db_file,0,SEEK_SET);
-        
+
+
+
 
     }
 
