@@ -326,7 +326,8 @@ void respond(int n)
 }
 
 int main(int argc,char ** argv){
- 
+    uint64_t key = createKey();
+    printf("%i",isValidTokenKey(key));
     if(argc>1){
         filePath = argv[1];
     }

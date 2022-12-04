@@ -10,8 +10,8 @@ uint32_t key_count = 0;
 
 uint64_t createKey(){
 	uint64_t key;
-	((uint32_t *)key)[0] = key_count;
-	((uint32_t *)key)[1] = (int)(time(0));
+	((uint32_t *)&key)[0] = key_count;
+	((uint32_t *)&key)[1] = (int)(time(0));
 	keys[key_count++] = key;
 	return key;
 }
