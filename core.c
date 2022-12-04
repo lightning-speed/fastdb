@@ -213,11 +213,6 @@ int startDB(int argc,char ** argv){
   			return 57;	
   	}	
   }
-  else if(!strcmp(argv[2],SERVER_C)){
-  	  
-    	serve_forever("12913");
-	
-	}
   else{
   	printf("Unknow Option '%s'",argv[2]);
   			return 69;

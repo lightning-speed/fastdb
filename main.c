@@ -5,7 +5,17 @@
 
 enum RUN_TYPE runType;
 
-char * help ="help";
+char * help ="\ncommands:"
+		"\n -read"
+		"\n -write"
+		"\n -delete"
+		"\n -point"
+		"\n -rename"
+		"\n -tree"
+		"\n -defragment"
+		"\n -setperms"
+		"\n -server"
+		"\n\n";
 int main(int argct,char ** arge){
 	if(argct>1&&(!strcmp(arge[1],"-help")||!strcmp(arge[1],"--help"))){
 		printf("%s",help);
@@ -14,7 +24,7 @@ int main(int argct,char ** arge){
 	else
 		input_file_path = arge[1];
 	if(argct>2&&!strcmp(arge[2],"-console")){
-		printf("FastDB Version 1.0.0\nRun -help to know commands\n");
+		printf("FastDB Version 1.0.0\n");
 		runType = CMD_LINE;
 		initArgs();
 		argct--;
@@ -39,7 +49,7 @@ int main(int argct,char ** arge){
 	else {
 		runType = SINGLE_EXEC;
 		initArgs();
-			startDB(argct,arge);
+		startDB(argct,arge);
 	}
 	printf("\n");
 

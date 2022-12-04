@@ -1,5 +1,5 @@
 
-const hostedSiteUrl = window.location.host;
+const hostedSiteUrl = window.location.origin;
 
 function encode(str){
     str = str.replaceAll(" ","(-)%20)");

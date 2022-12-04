@@ -6,4 +6,5 @@ SRC = *.c
 all:
 	$(CC) $(cflags) $(SRC) -o $(OUTPUT_FILE)
 	$(OUTPUT_FILE) ./db.dat
+	$(CC) $(cflags) server/*.c -o fast_server
    
