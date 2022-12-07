@@ -2,29 +2,27 @@
 const hostedSiteUrl = window.location.origin;
 
 function encode(str){
-    str = str.replaceAll(" ","(-)%20)");
-    str = str.replaceAll("<","(-)%3C)");
-    str = str.replaceAll(">","(-)%3E)");
-   str =  str.replaceAll("\t","(-)%T4)");
-    str = str.replaceAll("%","(-)%T5)");
-    str = str.replaceAll("$","(-)%T6)");
-    str = str.replaceAll(":","(-)%T7)");
-    str = str.replaceAll(";","(-)%T8)");
-    str = str.replaceAll("=","(-)%T9)");
-   str =  str.replaceAll("_","(-)%7A)");
+    str = str.replaceAll(" ","(-)20)");
+    str = str.replaceAll("<","(-)3C)");
+    str = str.replaceAll(">","(-)3E)");
+   str =  str.replaceAll("\t","(-)T4)");
+    str = str.replaceAll("$","(-)T6)");
+    str = str.replaceAll(":","(-)T7)");
+    str = str.replaceAll(";","(-)T8)");
+    str = str.replaceAll("=","(-)T9)");
+   str =  str.replaceAll("_","(-)7A)");
    return str;
 }
 function decode(str){
-    str = str.replaceAll("(-)%20)"," ");
-    str = str.replaceAll("(-)%3C)","<");
-    str = str.replaceAll("(-)%3E)",">");
-    str = str.replaceAll("(-)%T4)","\t");
-    str = str.replaceAll("(-)%T5)","%");
-    str = str.replaceAll("(-)%T6)","$");
-    str = str.replaceAll("(-)%T7)",":");
-    str = str.replaceAll("(-)%T8)",";");
-    str = str.replaceAll("(-)%T9)","=");
-    str = str.replaceAll("(-)%7A)","_");
+    str = str.replaceAll("(-)20)"," ");
+    str = str.replaceAll("(-)3C)","<");
+    str = str.replaceAll("(-)3E)",">");
+    str = str.replaceAll("(-)T4)","\t");
+    str = str.replaceAll("(-)T6)","$");
+    str = str.replaceAll("(-)T7)",":");
+    str = str.replaceAll("(-)T8)",";");
+    str = str.replaceAll("(-)T9)","=");
+    str = str.replaceAll("(-)7A)","_");
     return str;
 }
 
@@ -37,12 +35,18 @@ async function write(node,content){
 }
 async function read(node){
     node = node.replaceAll("/",".");
-    const res = (await httpGet(hostedSiteUrl+"/?&get&"+node));
-        res.data = decode(res);
+    const res = JSON.parse(await httpGet(hostedSiteUrl+"/?&get&"+node));
+    res.data = decode(res.data);
     return res;
 }
 
     
+async function info(node){
+    node = node.replaceAll("/",".");
+    const res = (await httpGet(hostedSiteUrl+"/?&info&"+node));
+    return JSON.parse(res);
+}
+
 
 async function httpGet(theUrl)
 {

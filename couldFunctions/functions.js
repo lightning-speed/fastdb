@@ -5,7 +5,7 @@ class functions{
 
  static async test(){
   	let buf = "a";
-  	buf = await io.read("com");
+  	buf = await io.read("com","shit");
   	console.log(buf);
   }
 }

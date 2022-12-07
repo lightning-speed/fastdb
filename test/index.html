@@ -9,8 +9,30 @@
 <script src="./client.js"></script>
 <script type="text/javascript">
 	async function st(){
-	document.body.innerHTML += await read("com");
-}
+		let lmg = (await info("msegs")).size;
+	  setInterval(async function(){
+		const z = (await info("msegs")).size;
+		console.log(z);
+		if(z>lmg){
+			for(let i = lmg;i<z;i++)
+			md.innerHTML +=(await read("msegs/"+i)).data+"<br>";
+			lmg=z;
+		}
+	  },1000);
+	}
+	async function send(msg){
+		let i = (await info("msegs")).size;
+		write("msegs/"+i, nameR.value+": " + msg);
+		console.log(nameR.value+":	" + msg);
+	}
 </script>
+<div id="md">
+
+</div>
+<input type="text" id="shit">
+<input type="text" id="nameR">
+
+<button onclick="send(shit.value)">SEND</button>
+
 </body >
 </html>	
