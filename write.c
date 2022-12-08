@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+int max(int a, int b)
+{
+	return a > b ? a : b;
+}
 node_t *createNode()
 {
 	return (node_t *)malloc(sizeof(node_t));
@@ -17,16 +21,22 @@ node_t *createRNode(char *name)
 	node->hasChild = false;
 	node->access = READ_WRITE;
 	node->isPointer = false;
+	node->saved = false;
+	node->cap = 0;
+	node->ca = NULL;
+	node->children = malloc(32 * sizeof(uintptr_t));
 	strcpy(node->name, name);
 	return node;
 }
 uintptr_t writeNode(node_t *node, FILE *db)
 {
+
 	if (node == NULL)
 	{
 		printf("CANNOT WRITE NULL NODE");
 		return (uintptr_t)NULL;
 	}
+	node->saved = true;
 	fseek(db, 0, SEEK_END);
 	node->addr = ftell(db);
 	saveNode(node, db);
@@ -37,6 +47,18 @@ void saveNode(node_t *node, FILE *db)
 	if (node == NULL)
 	{
 		printf("CANNOT SAVE NULL NODE");
+		return;
+	}
+	if (node->hasChild)
+	{
+		if (node->ca == NULL || node->size >= node->cap)
+		{
+			fseek(db, 0, SEEK_END);
+			node->ca = ftell(db);
+			node->cap += 20;
+				}
+		fseek(db, node->ca, SEEK_SET);
+		fwrite((char *)(node->children), 1, node->cap * sizeof(uintptr_t), db);
 	}
 	fseek(db, node->addr, SEEK_SET);
 	fwrite(node, 1, sizeof(node_t), db);
@@ -53,7 +75,7 @@ void linkNode(node_t *parent, node_t *child, FILE *db)
 		printf("%s%s%s%s%s", "Child '", child->name, "'' already exists in '", parent->name, "'");
 		return;
 	}
-	if (child->linked == false)
+	if (child->saved == false)
 		writeNode(child, db);
 	parent->children[parent->size++] = child->addr;
 	parent->hasChild = true;

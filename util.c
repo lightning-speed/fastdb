@@ -8,7 +8,7 @@ long long hashName(char *name)
 	int n = strlen(name);
 	for (int i = 0; i < n; i++)
 	{
-		out += name[i] * name[i] * name[i];
+		out += ;
 	}
 	return out;
 }

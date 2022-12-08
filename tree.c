@@ -34,9 +34,13 @@ void printTree(node_t *node, int depth, FILE *db)
 				putchar(' ');
 			}
 			putchar('[');
-			node_t *nodes = getNodeFromAddr(node->children[i], db);
-			printTree(nodes, depth + 2, db);
-			free(nodes);
+			uintptr_t add = node->children[i];
+			if (add != NULL)
+			{
+				node_t *nodes = getNodeFromAddr(add, db);
+				printTree(nodes, depth + 2, db);
+				free(nodes);
+			}
 		}
 }
 void ptree(node_t *db)

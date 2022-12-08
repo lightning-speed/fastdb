@@ -166,7 +166,6 @@ int startDB(int argc, char **argv)
 					{
 						sendSucessResponse("written!");
 					}
-					free(node);
 				}
 				else
 				{

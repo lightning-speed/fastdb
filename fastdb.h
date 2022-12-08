@@ -40,7 +40,9 @@ typedef struct
   long long uid;
   char name[64];
   uintptr_t *parent;
-  uintptr_t children[32];
+  uintptr_t *children;
+  uintptr_t ca;
+  int cap;
   uint16_t size;
   uintptr_t addr;
   bool linked;
@@ -48,6 +50,8 @@ typedef struct
   char *content;
   bool hasChild;
   bool isPointer;
+  bool saved;
+
 } node_t;
 
 extern FILE *db_file;
@@ -84,3 +88,6 @@ void initArgs();
 void sendNotFoundResponse();
 void sendIncorrectFormatResponse();
 void sendSucessResponse(char *data);
+
+void setChild(node_t *node, int at, uintptr_t addr, FILE *db);
+uintptr_t getAddrOfChildAt(node_t *node, int at, FILE *db);
