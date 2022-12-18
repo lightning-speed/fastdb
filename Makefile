@@ -4,7 +4,6 @@ OUTPUT_FILE  = ./fastdb
 SRC = *.c
 
 all:
-	$(CC) $(cflags) $(SRC) -o $(OUTPUT_FILE)
-	$(OUTPUT_FILE) ./db.dat
-	$(CC) $(cflags) server/*.c -o fast_server
+	$(CC) $(cflags) $(SRC) ./server/*.c -o $(OUTPUT_FILE)
+
    

@@ -56,7 +56,7 @@ typedef struct
 
 extern FILE *db_file;
 extern node_t *db_node;
-enum RUN_TYPE runType;
+extern enum RUN_TYPE runType;
 
 node_t *createDB();
 int startDB(int argc, char **argv);

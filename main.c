@@ -2,8 +2,6 @@
 #include <fastdb.h>
 #include <string.h>
 
-enum RUN_TYPE runType;
-
 char *help = "\ncommands:"
 			 "\n -read"
 			 "\n -write"
@@ -50,6 +48,13 @@ int main(int argct, char **arge)
 			}
 			startDB(argc, argv);
 		}
+	}
+	else if (argct > 2 && !strcmp(arge[2], "-server"))
+	{
+		runType = SINGLE_EXEC;
+		initArgs();
+
+		smain(argct, arge);
 	}
 	else
 	{

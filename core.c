@@ -6,6 +6,7 @@
 FILE *db_file;
 node_t *db_node;
 char *input_file_path = NULL;
+enum RUN_TYPE runType;
 char *index_file_path;
 char *coms[] = {"-write", "-read", "-delete", "-rename", "-point", "-tree", "-server", "-defragment", "-setperms", "-info"};
 char *WRITE_C;

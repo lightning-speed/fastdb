@@ -6,6 +6,7 @@
 
 node_t *addDEFNode(node_t *node, FILE *db, int depth)
 {
+	printf("\n%s", node->name);
 	node_t *nn = createRNode(node->name);
 	nn->size = 0;
 	nn->linked = node->linked;
@@ -21,8 +22,10 @@ node_t *addDEFNode(node_t *node, FILE *db, int depth)
 			{
 				char *content = readContent(cnode, db_file);
 				writeContent(cn, content, db);
-				free(content);
 			}
+			else
+				free(cn->children);
+			free(cn);
 		}
 	}
 	return nn;

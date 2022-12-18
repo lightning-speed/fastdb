@@ -67,18 +67,18 @@ void route();
     ROUTE("END", URI)  \
     }
 
+FILE *fp = NULL;
 int run(const char *cmd)
 {
-
+    return 0;
     char buf[128];
-    FILE *fp;
-
-    if ((fp = popen(cmd, "r")) == NULL)
-    {
-        printf("Error opening pipe!\n");
-        return -1;
-    }
-
+    if (fp == NULL)
+        if ((fp = popen("./fastdb db.dat -console", "w")) == NULL)
+        {
+            printf("Error opening pipe!\n");
+            return -1;
+        }
+    fputs(cmd, fp);
     while (fgets(buf, 128, fp) != NULL)
     {
         // Do whatever you want here...
@@ -118,42 +118,32 @@ void route()
         {
             if (strcmp(prot, "get") == 0)
             {
-                char *buff = malloc(2048);
-                sprintf(buff, "./fastdb %s -read %s", filePath, path);
-                run(buff);
-                free(buff);
+                char *args[4] = {"", filePath, "-read", path};
+                startDB(4, args);
                 responded = true;
             }
             else if (strcmp(prot, "write") == 0)
             {
-                char *buff = malloc(2048);
-                sprintf(buff, "./fastdb %s -write %s \"%s\"", filePath, path, content);
-                run(buff);
-                free(buff);
+                char *args[5] = {"", filePath, "-write", path, content};
+                startDB(5, args);
                 responded = true;
             }
             else if (strcmp(prot, "info") == 0)
             {
-                char *buff = malloc(2048);
-                sprintf(buff, "./fastdb %s -info %s", filePath, path);
-                run(buff);
-                free(buff);
+                char *args[4] = {"", filePath, "-info", path};
+                startDB(4, args);
                 responded = true;
             }
             else if (strcmp(prot, "delete") == 0)
             {
-                char *buff = malloc(2048);
-                sprintf(buff, "./fastdb %s -delete %s", filePath, path);
-                run(buff);
-                free(buff);
+                char *args[4] = {"", filePath, "-delete", path};
+                startDB(4, args);
                 responded = true;
             }
             else if (strcmp(prot, "rename") == 0)
             {
-                char *buff = malloc(2048);
-                sprintf(buff, "./fastdb %s -rename %s %s", filePath, path, content);
-                run(buff);
-                free(buff);
+                char *args[5] = {"", filePath, "-rename", path, content};
+                startDB(5, args);
                 responded = true;
             }
             else
@@ -337,30 +327,6 @@ void respond(int n)
             qs = uri - 1; // use an empty string
         }
 
-        header_t *h = reqhdr;
-        char *t, *t2;
-        while (h < reqhdr + 16)
-        {
-            char *k, *v, *t;
-            k = strtok(NULL, "\r\n: \t");
-            if (!k)
-                break;
-            v = strtok(NULL, "\r\n");
-            while (*v && *v == ' ')
-                v++;
-            h->name = k;
-            h->value = v;
-            h++;
-            // fprintf(logFile, "[H] %s: %s\n", k, v);
-            t = v + 1 + strlen(v);
-            if (t[1] == '\r' && t[2] == '\n')
-                break;
-        }
-        t++;                                   // now the *t shall be the beginning of user payload
-        t2 = request_header("Content-Length"); // and the related header if there is
-        payload = t;
-        payload_size = t2 ? atol(t2) : (rcvd - (t - buf));
-
         // bind clientfd to stdout, making it easier to write
         clientfd = clients[n];
         dup2(clientfd, STDOUT_FILENO);
@@ -381,10 +347,8 @@ void respond(int n)
     clients[n] = -1;
 }
 
-int main(int argc, char **argv)
+int smain(int argc, char **argv)
 {
-    uint64_t key = createKey();
-    printf("%i", isValidTokenKey(key));
     if (argc > 1)
     {
         filePath = argv[1];
@@ -394,9 +358,9 @@ int main(int argc, char **argv)
         printf("DB file required\n");
         return -1;
     }
-    if (argc > 2)
+    if (argc > 3)
     {
-        indPath = argv[2];
+        indPath = argv[3];
     }
     serve_forever("9001");
 }

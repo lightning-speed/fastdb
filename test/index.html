@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Meow</title>
-</head>
-<body onload="st()">
-<script src="./client.js"></script>
-<script type="text/javascript">
-	var str = null;
-	async function up(){
-		for(let i = 0;i<10&&str!=0;i++){
-			str--;
-			md.innerHTML = (await read("msegs/"+str)).data+"<br>"+md.innerHTML;
-		}
-	}
-	async function st(){
-		let lmg = (await info("msegs")).size-10;
-		lmg = Math.max(lmg,0);
-		if(lmg==null)lmg = 0;
-	  setInterval(async function(){
-		const z = (await info("msegs")).size;
-		if(z==null)z = 0;
-		console.log("z: "+z+" lmg: "+lmg);
-		if(z>lmg){
-			for(let i = lmg;i<z;i++)
-			md.innerHTML +=(await read("msegs/"+i)).data+"<br>";
-			lmg=z;
-			if(str==null)
-			str = Math.max(0,z-10);
-		}
-	  },700);
-	}
-	async function send(msg){
-		let i = (await info("msegs")).size;
-		if(i==null)i = 0;
-		await write("msegs/"+i,msg);
-		console.log(nameR.value+":	" + msg);
-	}
-</script>
-<button onclick="up()">UP</button>
-<div id="md">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Meow</title>
+  </head>
+  <body onload="st()">
+    <script src="./client.js"></script>
+    <script type="text/javascript">
+      var str = null;
+      async function up() {
+        for (let i = 0; i < 10 && str != 0; i++) {
+          str--;
+          md.innerHTML =
+            (await read("msegs/" + str)).data + "<br>" + md.innerHTML;
+        }
+      }
+      async function st() {
+        let lmg = (await info("msegs")).size - 10;
+        lmg = Math.max(lmg, 0);
+        if (lmg == null) lmg = 0;
+        setInterval(async function () {
+          let z = (await info("msegs")).size;
+          if (z == null) z = 0;
+          console.log("z: " + z + " lmg: " + lmg);
+          if (z > lmg) {
+            for (let i = lmg; i < z; i++)
+              md.innerHTML += (await read("msegs/" + i)).data + "<br>";
+            lmg = z;
+            if (str == null) str = Math.max(0, z - 10);
+          }
+        }, 700);
+      }
+      async function send(msg) {
+        let i = (await info("msegs")).size;
+        if (i == null) i = 0;
+        await write("msegs/" + i, msg);
+        console.log(nameR.value + ":	" + msg);
+      }
+    </script>
+    <button onclick="up()">UP</button>
+    <div id="md"></div>
+    <input type="text" id="shit" />
+    <input type="text" id="nameR" />
 
-</div>
-<input type="text" id="shit">
-<input type="text" id="nameR">
-
-<button onclick="send(shit.value)">SEND</button>
-
-</body >
-</html>	
+    <button onclick="send(shit.value)">SEND</button>
+  </body>
+</html>
