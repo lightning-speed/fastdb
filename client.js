@@ -1,53 +1,39 @@
+/*const https = require("https");
 
-const hostedSiteUrl = window.location.host;
+// Sample URL
+for (let i = 0; i < 100; i++) {
+  const url = "http://127.0.0.1:9001?&get&msegs." + i;
+  const request = https.request(url, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
 
-function encode(str){
-    str = str.replaceAll(" ","(-)%20)");
-    str = str.replaceAll("<","(-)%3C)");
-    str = str.replaceAll(">","(-)%3E)");
-   str =  str.replaceAll("\t","(-)%T4)");
-    str = str.replaceAll("%","(-)%T5)");
-    str = str.replaceAll("$","(-)%T6)");
-    str = str.replaceAll(":","(-)%T7)");
-    str = str.replaceAll(";","(-)%T8)");
-    str = str.replaceAll("=","(-)%T9)");
-   str =  str.replaceAll("_","(-)%7A)");
-   return str;
+    response.on("end", () => {
+      console.log(data);
+    });
+  });
+
+  request.on("error", (error) => {
+    console.log("An error", error);
+  });
+
+  request.end();
 }
-function decode(str){
-    str = str.replaceAll("(-)%20)"," ");
-    str = str.replaceAll("(-)%3C)","<");
-    str = str.replaceAll("(-)%3E)",">");
-    str = str.replaceAll("(-)%T4)","\t");
-    str = str.replaceAll("(-)%T5)","%");
-    str = str.replaceAll("(-)%T6)","$");
-    str = str.replaceAll("(-)%T7)",":");
-    str = str.replaceAll("(-)%T8)",";");
-    str = str.replaceAll("(-)%T9)","=");
-    str = str.replaceAll("(-)%7A)","_");
-    return str;
-}
+*/
 
-
-async function write(node,content){
-    node = node.replaceAll("/",".");
-    content = encode(content);
-    const res = await httpGet(hostedSiteUrl+"/?&write&"+node+"&a&"+content);
-    return res;
+const https = require("https");
+async function a() {
+  https
+    .get("https://pocketchat.fireship.app", function (res) {
+      console.log(res.statusCode);
+      res.setEncoding("utf8");
+      res.on("data", function (data) {
+        console.log(data.charAt(0));
+      });
+    })
+    .on("error", function (err) {
+      console.log(err);
+    });
 }
-async function read(node){
-    node = node.replaceAll("/",".");
-    const res = (await httpGet(hostedSiteUrl+"/?&get&"+node));
-        res.data = decode(res);
-    return res;
-}
-
-    
-
-async function httpGet(theUrl)
-{
-    var xmlHttp = new XMLHttpRequest();
-    await xmlHttp.open( "GET", theUrl, false ); 
-    await xmlHttp.send( null );
-    return xmlHttp.responseText;
-}
+setInterval(a, 50);

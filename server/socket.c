@@ -12,6 +12,7 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <fastdb.h>
 // Server control functions
 
 #define CONNMAX 1000
@@ -67,27 +68,6 @@ void route();
     ROUTE("END", URI)  \
     }
 
-FILE *fp = NULL;
-int run(const char *cmd)
-{
-    return 0;
-    char buf[128];
-    if (fp == NULL)
-        if ((fp = popen("./fastdb db.dat -console", "w")) == NULL)
-        {
-            printf("Error opening pipe!\n");
-            return -1;
-        }
-    fputs(cmd, fp);
-    while (fgets(buf, 128, fp) != NULL)
-    {
-        // Do whatever you want here...
-        printf("%s", buf);
-    }
-
-    return pclose(fp);
-}
-
 void route()
 {
     bool responded = false;
@@ -112,44 +92,64 @@ void route()
             content = strtok(NULL, "&");
         fprintf(stderr, "\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n", prot, path, content, tokenKey);
         fprintf(logFile, "\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n", prot, path, content, tokenKey);
-
-        // if (isValidTokenKey(tokenKey))
-        if (prot != NULL)
+        if (isValidTokenKey((uint64_t)strtoull(tokenKey, NULL, 10)))
         {
-            if (strcmp(prot, "get") == 0)
+
+            // if (isValidTokenKey(tokenKey))
+            if (prot != NULL)
             {
-                char *args[4] = {"", filePath, "-read", path};
-                startDB(4, args);
-                responded = true;
-            }
-            else if (strcmp(prot, "write") == 0)
-            {
-                char *args[5] = {"", filePath, "-write", path, content};
-                startDB(5, args);
-                responded = true;
-            }
-            else if (strcmp(prot, "info") == 0)
-            {
-                char *args[4] = {"", filePath, "-info", path};
-                startDB(4, args);
-                responded = true;
-            }
-            else if (strcmp(prot, "delete") == 0)
-            {
-                char *args[4] = {"", filePath, "-delete", path};
-                startDB(4, args);
-                responded = true;
-            }
-            else if (strcmp(prot, "rename") == 0)
-            {
-                char *args[5] = {"", filePath, "-rename", path, content};
-                startDB(5, args);
-                responded = true;
-            }
-            else
-            {
+                if (strcmp(prot, "get") == 0)
+                {
+                    char *args[4] = {"", filePath, "-read", path};
+                    startDB(4, args);
+                    responded = true;
+                }
+                else if (strcmp(prot, "write") == 0)
+                {
+                    char *args[5] = {"", filePath, "-write", path, content};
+                    startDB(5, args);
+                    responded = true;
+                }
+                else if (strcmp(prot, "info") == 0)
+                {
+                    char *args[4] = {"", filePath, "-info", path};
+                    startDB(4, args);
+                    responded = true;
+                }
+                else if (strcmp(prot, "delete") == 0)
+                {
+                    char *args[4] = {"", filePath, "-delete", path};
+                    startDB(4, args);
+                    responded = true;
+                }
+                else if (strcmp(prot, "rename") == 0)
+                {
+                    char *args[5] = {"", filePath, "-rename", path, content};
+                    startDB(5, args);
+                    responded = true;
+                }
+
+                else
+                {
+                }
             }
         }
+        else if (strlen(prot) != 0 && strcmp(prot, "aus") == 0)
+        {
+            uint64_t key = loginUser(path, tokenKey);
+            fprintf(stderr, "%lli", (uint64_t)key);
+            char dat[256];
+            sprintf(dat, "%lli", key);
+            if (key != (uint64_t)1)
+                sendSucessResponse(dat);
+            else
+            {
+                sendUnAuthResponse("Invalid loing credentials");
+            }
+            responded = true;
+        }
+        else
+            sendUnAuthResponse("Invalid Seq Key");
     }
 
     ROUTE_POST("/")
@@ -188,6 +188,7 @@ void route()
                 }
                 fclose(file);
             }
+            free(buff);
         }
     }
 }
@@ -340,7 +341,7 @@ void respond(int n)
         shutdown(STDOUT_FILENO, SHUT_WR);
         close(STDOUT_FILENO);
     }
-
+    free(buf);
     // Closing SOCKET
     shutdown(clientfd, SHUT_RDWR); // All further send and recieve operations are DISABLED...
     close(clientfd);

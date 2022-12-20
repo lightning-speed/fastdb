@@ -33,3 +33,12 @@ void sendOtherErroResponse(char *res)
            OTHER_ERROR_RESPONSE,
            res);
 }
+void sendUnAuthResponse(char *res)
+{
+    printf("{"
+           "    \"response\": %i,"
+           "    \"data\": \"%s\""
+           "}",
+           UNAUTH_REQUEST_FORMAT,
+           res);
+}

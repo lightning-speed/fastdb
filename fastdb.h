@@ -13,6 +13,7 @@ extern char *index_file_path;
 #define SUCESSFUL_RESPONSE 200
 #define NOT_FOUND_RESPONSE 404
 #define INCORRECT_REQUEST_FORMAT 403
+#define UNAUTH_REQUEST_FORMAT 401
 #define OTHER_ERROR_RESPONSE 500
 
 enum access_t
@@ -54,6 +55,12 @@ typedef struct
 
 } node_t;
 
+typedef struct
+{
+  char username[32];
+  char passhash[256];
+} user_t;
+
 extern FILE *db_file;
 extern node_t *db_node;
 extern enum RUN_TYPE runType;
@@ -87,7 +94,13 @@ void initArgs();
 
 void sendNotFoundResponse();
 void sendIncorrectFormatResponse();
+void sendUnAuthResponse(char *data);
 void sendSucessResponse(char *data);
 
 void setChild(node_t *node, int at, uintptr_t addr, FILE *db);
 uintptr_t getAddrOfChildAt(node_t *node, int at, FILE *db);
+
+uint64_t createKey();
+bool isValidTokenKey(uint64_t keyL);
+uint64_t loginUser(char *username, char *phash);
+void registerUser(char *username, char *phash);

@@ -17,6 +17,7 @@
         }
       }
       async function st() {
+        await signup("meow", "owch");
         let lmg = (await info("msegs")).size - 10;
         lmg = Math.max(lmg, 0);
         if (lmg == null) lmg = 0;

@@ -6,7 +6,6 @@
 
 node_t *addDEFNode(node_t *node, FILE *db, int depth)
 {
-	printf("\n%s", node->name);
 	node_t *nn = createRNode(node->name);
 	nn->size = 0;
 	nn->linked = node->linked;

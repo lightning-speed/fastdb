@@ -50,6 +50,7 @@ int startDB(int argc, char **argv)
 	}
 	// OPEN
 	db_file = fopen(input_file_path, fprotocol);
+	db_file = fopen(input_file_path, fprotocol);
 	if (db_file == NULL)
 	{
 		db_file = fopen(input_file_path, "wb+");

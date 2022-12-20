@@ -56,7 +56,7 @@ void saveNode(node_t *node, FILE *db)
 			fseek(db, 0, SEEK_END);
 			node->ca = ftell(db);
 			node->cap += 20;
-				}
+		}
 		fseek(db, node->ca, SEEK_SET);
 		fwrite((char *)(node->children), 1, node->cap * sizeof(uintptr_t), db);
 	}

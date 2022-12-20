@@ -15,6 +15,9 @@ char *help = "\ncommands:"
 			 "\n\n";
 int main(int argct, char **arge)
 {
+	remove("./.akeys");
+	registerUser("meow", "owch");
+	printf("%lli %lli", loginUser("meow", "owch"), loginUser("meow", "owch"));
 	if (argct > 1 && (!strcmp(arge[1], "-help") || !strcmp(arge[1], "--help")))
 	{
 		printf("%s", help);
