@@ -17,10 +17,11 @@
         }
       }
       async function st() {
-        await signup("meow", "owch");
-        let lmg = (await info("msegs")).size - 10;
+        const result = await signup("meow", "owch");
+        let lmg = (await info("msegs")).size;
+        if (lmg == undefined) lmg = 0;
+        lmg -= 10;
         lmg = Math.max(lmg, 0);
-        if (lmg == null) lmg = 0;
         setInterval(async function () {
           let z = (await info("msegs")).size;
           if (z == null) z = 0;

@@ -9,19 +9,23 @@ user_t users[10];
 int user_count = 0;
 uint64_t keys[600];
 
-uint32_t key_count = 1;
+uint32_t key_count = 0;
 void usbanrk(char *a, char *b)
 {
 	char c[2] = {a[0], b[0]};
 	fprintf(stderr, a);
 }
-void readKeys()
+void readKey(int keyN)
 {
 	FILE *f = fopen(".akeys", "rb+");
 	if (f != NULL)
 	{
 		fread(&key_count, 1, 4, f);
-		fread(&keys, 600, 8, f);
+		if (keyN < key_count && keyN < 600)
+		{
+			fseek(f, (keyN * 8) + 4, SEEK_SET);
+			fread((&keys[keyN]), 1, 8, f);
+		}
 		fclose(f);
 	}
 }
@@ -34,7 +38,12 @@ void writeKeys()
 }
 uint64_t createKey()
 {
-	readKeys();
+	readKey(0);
+	if (key_count >= 599)
+	{
+		// MAX KEYS REACHED
+		return 0;
+	}
 	uint64_t t;
 	time(&t);
 	uint64_t key;
@@ -48,10 +57,10 @@ uint64_t createKey()
 
 bool isValidTokenKey(uint64_t keyL)
 {
-	readKeys();
 
 	uint32_t keyID = ((uint32_t *)&keyL)[0];
-	if (keyID < key_count && keyID > 0)
+	readKey(keyID);
+	if (keyID < key_count)
 	{
 		uint64_t a = keys[keyID];
 		usbanrk("%i", a);

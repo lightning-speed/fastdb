@@ -52,6 +52,6 @@ void ptree(node_t *db)
 	contentsize /= 1024;
 	printf("\nMeta Size: %i KB\n", metasize);
 	printf("Content Size Size: %i KB\n", contentsize);
-	printf("Fragmented Waste: %i KB\n", totalsize - (metasize + contentsize));
+	printf("Fragmented : %i KB\n", totalsize - (metasize + contentsize));
 	printf("Total Size: %i KB\n", totalsize);
 }

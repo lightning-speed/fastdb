@@ -91,7 +91,6 @@ void route()
         if (tokenKey != NULL)
             content = strtok(NULL, "&");
         fprintf(stderr, "\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n", prot, path, content, tokenKey);
-        fprintf(logFile, "\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n", prot, path, content, tokenKey);
         if (isValidTokenKey((uint64_t)strtoull(tokenKey, NULL, 10)))
         {
 
@@ -134,14 +133,18 @@ void route()
                 }
             }
         }
-        else if (strlen(prot) != 0 && strcmp(prot, "aus") == 0)
+        else if (prot != NULL && strcmp(prot, "aus") == 0)
         {
             uint64_t key = loginUser(path, tokenKey);
             fprintf(stderr, "%lli", (uint64_t)key);
             char dat[256];
             sprintf(dat, "%lli", key);
-            if (key != (uint64_t)1)
+            if (key != 1 && key != 0)
                 sendSucessResponse(dat);
+            else if (key == 0)
+            {
+                sendOtherErroResponse("Max Seq Key count reached!");
+            }
             else
             {
                 sendUnAuthResponse("Invalid loing credentials");
@@ -196,7 +199,6 @@ void route()
 void serve_forever(const char *PORT)
 {
 
-    logFile = fopen("./server.log", "wb+");
     struct sockaddr_in clientaddr;
     socklen_t addrlen;
     char c;
@@ -217,8 +219,10 @@ void serve_forever(const char *PORT)
     signal(SIGCHLD, SIG_IGN);
 
     // ACCEPT connections
+    int klr = 0;
     while (1)
     {
+        usleep(10000);
         addrlen = sizeof(clientaddr);
         clients[slot] = accept(listenfd, (struct sockaddr *)&clientaddr, &addrlen);
 
@@ -234,11 +238,29 @@ void serve_forever(const char *PORT)
                 exit(0);
             }
         }
-
-        while (clients[slot] != -1)
-            slot = (slot + 1) % CONNMAX;
+        klr++;
+        for (int i = 0; i < CONNMAX; i++)
+        {
+            if (clients[i] == -1)
+            {
+                slot = i;
+                break;
+            }
+            if (i == CONNMAX - 1)
+            {
+                printf("meow");
+                for (int j = 0; j < CONNMAX; j++)
+                {
+                    int clientfdr = clients[j];
+                    shutdown(clientfdr, SHUT_RDWR);
+                    close(clientfdr);
+                    clients[j] = -1;
+                }
+                slot = 0;
+                break;
+            }
+        }
     }
-    fclose(logFile);
 }
 
 // start server

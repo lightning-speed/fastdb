@@ -6,6 +6,7 @@ async function signup(username, password) {
   );
   res = JSON.parse(res);
   seqKey = res.data;
+  return res;
 }
 function encode(str) {
   str = str.replaceAll(" ", "(-)20)");

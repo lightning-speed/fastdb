@@ -96,6 +96,7 @@ void sendNotFoundResponse();
 void sendIncorrectFormatResponse();
 void sendUnAuthResponse(char *data);
 void sendSucessResponse(char *data);
+void sendOtherErroResponse(char *res);
 
 void setChild(node_t *node, int at, uintptr_t addr, FILE *db);
 uintptr_t getAddrOfChildAt(node_t *node, int at, FILE *db);
