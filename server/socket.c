@@ -91,7 +91,8 @@ void route()
         if (tokenKey != NULL)
             content = strtok(NULL, "&");
         fprintf(stderr, "\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n", prot, path, content, tokenKey);
-        if (isValidTokenKey((uint64_t)strtoull(tokenKey, NULL, 10)))
+
+        if (tokenKey != NULL && isValidTokenKey((uint64_t)strtoull(tokenKey, NULL, 10)))
         {
 
             // if (isValidTokenKey(tokenKey))
@@ -151,7 +152,22 @@ void route()
             }
             responded = true;
         }
-        else
+        else if (prot != NULL && strcmp(prot, "reg") == 0)
+        {
+            int res = registerUser(path, tokenKey);
+            if (res == 0)
+            {
+                char dat[256];
+                sprintf(dat, "%lli", loginUser(path, tokenKey));
+                sendSucessResponse(dat);
+            }
+            else
+            {
+                sendUnAuthResponse("User already exist");
+            }
+            responded = true;
+        }
+        else if (prot != NULL)
             sendUnAuthResponse("Invalid Seq Key");
     }
 

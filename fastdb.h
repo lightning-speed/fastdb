@@ -104,4 +104,4 @@ uintptr_t getAddrOfChildAt(node_t *node, int at, FILE *db);
 uint64_t createKey();
 bool isValidTokenKey(uint64_t keyL);
 uint64_t loginUser(char *username, char *phash);
-void registerUser(char *username, char *phash);
+int registerUser(char *username, char *phash);

@@ -1,51 +1,41 @@
 <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Meow</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="ui.css" />
   </head>
-  <body onload="st()">
-    <script src="./client.js"></script>
-    <script type="text/javascript">
-      var str = null;
-      async function up() {
-        for (let i = 0; i < 10 && str != 0; i++) {
-          str--;
-          md.innerHTML =
-            (await read("msegs/" + str)).data + "<br>" + md.innerHTML;
-        }
-      }
-      async function st() {
-        const result = await signup("meow", "owch");
-        let lmg = (await info("msegs")).size;
-        if (lmg == undefined) lmg = 0;
-        lmg -= 10;
-        lmg = Math.max(lmg, 0);
-        setInterval(async function () {
-          let z = (await info("msegs")).size;
-          if (z == null) z = 0;
-          console.log("z: " + z + " lmg: " + lmg);
-          if (z > lmg) {
-            for (let i = lmg; i < z; i++)
-              md.innerHTML += (await read("msegs/" + i)).data + "<br>";
-            lmg = z;
-            if (str == null) str = Math.max(0, z - 10);
-          }
-        }, 700);
-      }
-      async function send(msg) {
-        let i = (await info("msegs")).size;
-        if (i == null) i = 0;
-        await write("msegs/" + i, msg);
-        console.log(nameR.value + ":	" + msg);
-      }
-    </script>
-    <button onclick="up()">UP</button>
-    <div id="md"></div>
-    <input type="text" id="shit" />
-    <input type="text" id="nameR" />
+  <body onload="start()">
+    <div id="main_ui_forever">
+      <script src="ui.js" defer></script>
+      <script src="componenet.js" defer></script>
+      <script src="manager.js" defer></script>
+      <script src="View.js" defer></script>
+      <script src="App.js" defer></script>
+      <script src="login.js" defer></script>
+      <script src="client.js" defer></script>
+      <script src="Internal.js" defer></script>
 
-    <button onclick="send(shit.value)">SEND</button>
+      <script defer>
+        function start() {
+          Manager.init(DARK_THEME, new App());
+        }
+      </script>
+    </div>
+    <div id="ask_dialog_cover">
+      <div id="ask_dialog">
+        <span style="color: white">Are you sure you want to exit?</span>
+        <hr />
+        <button style="background-color: rgb(79, 20, 215); color: white">
+          Ok
+        </button>
+        <button style="background-color: rgb(100, 100, 100); color: white">
+          Cancel
+        </button>
+      </div>
+    </div>
   </body>
 </html>
