@@ -4,7 +4,6 @@ It is a fast and lightweight database server
 
 ![image](https://user-images.githubusercontent.com/82322282/204299165-f232aef6-9128-4732-8678-27e8078e5d87.png)
 
-![image](https://user-images.githubusercontent.com/82322282/208751301-b662e160-22bb-4919-ae36-a8d75c9ebd68.png)
 
 
 Running a small example
