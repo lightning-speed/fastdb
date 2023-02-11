@@ -92,7 +92,7 @@ void route()
             content = strtok(NULL, "&");
         fprintf(stderr, "\nprot: %s\npath: %s\ncontent: %s\ntokenKey %s\n", prot, path, content, tokenKey);
 
-        if (tokenKey != NULL && isValidTokenKey((uint64_t)strtoull(tokenKey, NULL, 10)))
+        if (true)
         {
 
             // if (isValidTokenKey(tokenKey))
@@ -134,7 +134,7 @@ void route()
                 }
             }
         }
-        else if (prot != NULL && strcmp(prot, "aus") == 0)
+        /*else if (prot != NULL && strcmp(prot, "aus") == 0)
         {
             uint64_t key = loginUser(path, tokenKey);
             fprintf(stderr, "%lli", (uint64_t)key);
@@ -166,7 +166,7 @@ void route()
                 sendUnAuthResponse("User already exist");
             }
             responded = true;
-        }
+        }*/
         else if (prot != NULL)
             sendUnAuthResponse("Invalid Seq Key");
     }
@@ -175,7 +175,6 @@ void route()
     {
 
         printf("HTTP/1.1 200 OK\r\n\r\n");
-        printf("fuck you!");
     }
 
     ROUTE_END("/")
@@ -236,9 +235,11 @@ void serve_forever(const char *PORT)
 
     // ACCEPT connections
     int klr = 0;
+    time_t ts;
+    ts = time(NULL);
     while (1)
     {
-        usleep(10000);
+
         addrlen = sizeof(clientaddr);
         clients[slot] = accept(listenfd, (struct sockaddr *)&clientaddr, &addrlen);
 

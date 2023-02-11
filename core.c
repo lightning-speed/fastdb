@@ -90,6 +90,10 @@ int startDB(int argc, char **argv)
 						printf("Node does not have read permission");
 						return 78;
 					}
+					else if(content== -1){
+							printf("Node is a directory");
+						return 79;
+					}
 					else
 						sendSucessResponse(content);
 					free(content);
@@ -105,7 +109,6 @@ int startDB(int argc, char **argv)
 			{
 				sendIncorrectFormatResponse();
 
-				printf("usage: -read [node_path]");
 				return 57;
 			}
 		}
@@ -139,7 +142,6 @@ int startDB(int argc, char **argv)
 			{
 				sendIncorrectFormatResponse();
 
-				printf("usage: -read [node_path]");
 				return 57;
 			}
 		}
@@ -179,7 +181,6 @@ int startDB(int argc, char **argv)
 			{
 				sendIncorrectFormatResponse();
 
-				printf("usage: -write [node_path] [data]");
 				return 57;
 			}
 		}
@@ -258,7 +259,6 @@ int startDB(int argc, char **argv)
 			else
 			{
 				sendIncorrectFormatResponse();
-				printf("usage: -delete [node_path]");
 				return 57;
 			}
 		}
@@ -281,7 +281,7 @@ int startDB(int argc, char **argv)
 			}
 			else
 			{
-				sendIncorrectFormatResponse();
+
 
 				printf("usage: -setperms [node_path] [perms] //perms must be a value between 0-3 [read,write,read_write]");
 				return 57;
@@ -313,7 +313,6 @@ int startDB(int argc, char **argv)
 			else
 			{
 				sendIncorrectFormatResponse();
-				printf("usage: -point [node_path(child)] [node_path(parent)] ");
 				return 57;
 			}
 		}
@@ -340,13 +339,18 @@ node_t *openNode(char *path, enum access_t access)
 		{
 			temp[depth_index][str_index] = path[i];
 			temp[depth_index][++str_index] = 0;
+
 		}
 		else
 		{
+
 			depth_index++;
 			str_index = 0;
 		}
 	}
+		if(str_index==0){
+			return NULL;
+		}
 	node_t *node = getNodeFromAddr(0, db_file);
 	for (int i = 0; i < depth_index + 1; i++)
 	{

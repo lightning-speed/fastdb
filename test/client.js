@@ -19,8 +19,10 @@ async function signup(username, password) {
   res = JSON.parse(res);
   if (res.response != 200) {
     alert("Invalid Login Details");
+    localStorage.setItem("login", null);
     return -1;
   }
+
   seqKey = res.data;
   return res;
 }
@@ -41,6 +43,7 @@ async function register(username, password) {
     hostedSiteUrl + "/?&reg&" + username + "&" + password
   );
   res = JSON.parse(res);
+
   seqKey = res.data;
   return res;
 }
@@ -74,29 +77,58 @@ function decode(str) {
 async function write(node, content) {
   node = node.replaceAll("/", ".");
   content = encode(content);
-  const res = await httpGet(
+  let resf = await httpGet(
     hostedSiteUrl + "/?&write&" + node + "&" + seqKey + "&" + content
   );
-  return res;
+  if (resf.data == "Invalid Seq Key") {
+    let res = localStorage.getItem("login");
+    res = JSON.parse(res);
+    await signup(res.username, res.password);
+  }
+  resf = await httpGet(
+    hostedSiteUrl + "/?&write&" + node + "&" + seqKey + "&" + content
+  );
+  return resf;
 }
 async function read(node) {
   node = node.replaceAll("/", ".");
-  const res = JSON.parse(
+  let resf = JSON.parse(
     await httpGet(hostedSiteUrl + "/?&get&" + node + "&" + seqKey)
   );
-  if (res.data != null) res.data = decode(res.data);
-  return res;
+  if (resf.data == "Invalid Seq Key") {
+    let res = localStorage.getItem("login");
+    res = JSON.parse(res);
+    await signup(res.username, res.password);
+  }
+  resf = JSON.parse(
+    await httpGet(hostedSiteUrl + "/?&get&" + node + "&" + seqKey)
+  );
+  if (resf.data != null) resf.data = decode(resf.data);
+  return resf;
 }
 
 async function info(node) {
   node = node.replaceAll("/", ".");
-  const res = await httpGet(hostedSiteUrl + "/?&info&" + node + "&" + seqKey);
-  return JSON.parse(res);
+  let resf = await httpGet(hostedSiteUrl + "/?&info&" + node + "&" + seqKey);
+  if (resf.data == "Invalid Seq Key") {
+    let res = localStorage.getItem("login");
+    res = JSON.parse(res);
+    await signup(res.username, res.password);
+  }
+  resf = await httpGet(hostedSiteUrl + "/?&info&" + node + "&" + seqKey);
+  return JSON.parse(resf);
 }
 async function remove(node) {
   node = node.replaceAll("/", ".");
-  const res = await httpGet(hostedSiteUrl + "/?&delete&" + node + "&" + seqKey);
-  return JSON.parse(res);
+  let resf = await httpGet(hostedSiteUrl + "/?&delete&" + node + "&" + seqKey);
+  if (resf.data == "Invalid Seq Key") {
+    let res = localStorage.getItem("login");
+    res = JSON.parse(res);
+    await signup(res.username, res.password);
+  }
+  resf = await httpGet(hostedSiteUrl + "/?&delete&" + node + "&" + seqKey);
+
+  return JSON.parse(resf);
 }
 
 async function httpGet(theUrl) {

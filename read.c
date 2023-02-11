@@ -48,6 +48,8 @@ char *readContent(node_t *node, FILE *db)
 	{
 		return NULL;
 	}
+	if( node->hasChild == true)
+	return -1;
 	char *out = malloc(node->size);
 	fseek(db, (uintptr_t)node->content, SEEK_SET);
 	int result = fread(out, 1, node->size, db);
